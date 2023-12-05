@@ -1,24 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <link href="/main.css" rel="stylesheet" />
-  </head>
 
-  <body class="grey-bg">
-    <%- include('nav.ejs')%>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+  <link href="/main.css" rel="stylesheet" />
+</head>
+
+<body class="grey-bg">
+  <%- include('nav.ejs')%>
     <div class="white-bg">
       <% for(let i=0; i < posts.length; i++) { %>
-      <div class="list-box">
-        <a href="/detail/<%= posts[i]._id %>">
-          <h3><%= posts[i].title %></h3>
-        </a>
-        <a href="/edit/<%= posts[i]._id %>">✏️</a>
-        <p><%= posts[i].content %></p>
-      </div>
-      <% } %>
+        <div class="list-box">
+          <a href="/detail/<%= posts[i]._id %>">
+            <h3>
+              <%= posts[i].title %>
+            </h3>
+          </a>
+          <a href="/edit/<%= posts[i]._id %>">✏️</a>
+          <span class="delete" data-id="<%= posts[i]._id%>">🗑️</span>
+          <p>
+            <%= posts[i].content %>
+          </p>
+        </div>
+        <% } %>
+
     </div>
-  </body>
+    <% for(let i=0 ; i<(Number(whole)/5) ;i++){%>
+      <a class='pagination' href="/list/<%= i+1 %>">
+        <%= i+1%>
+      </a>
+      <%}%>
+</body>
+<script>
+  for (let i = 0; i < '<%= posts.length%>'; i++) {
+
+    document.querySelectorAll('.delete')[i]
+      .addEventListener('click', function (e) {
+        fetch('/delete?docid=' + e.target.dataset.id, {
+          method: 'DELETE',
+        })
+          .then((r) => r.text())
+          .then((r) => {
+            e.target.parentElement.style.display = 'none'
+          })
+      })
+  }
+</script>
+
 </html>

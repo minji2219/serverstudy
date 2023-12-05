@@ -2,6 +2,11 @@ body {
   margin: 0;
 }
 
+a {
+  text-decoration: none;
+  color: black;
+}
+
 .nav {
   display: flex;
   padding: 15px;
@@ -42,16 +47,19 @@ body {
   margin: 5px;
   color: grey;
 }
+
 input,
 div {
   box-sizing: border-box;
 }
+
 .form-box {
   background: white;
   padding: 25px;
   margin: 20px;
   border-radius: 8px;
 }
+
 .form-box input {
   padding: 10px;
   font-size: 16px;
@@ -60,14 +68,25 @@ div {
   border-radius: 5px;
   margin-bottom: 10px;
 }
+
 .form-box button {
   padding: 10px;
   border: none;
   background: lightgrey;
   border-radius: 5px;
 }
+
 .detail-bg {
   background: white;
   padding: 15px;
   margin-top: 10px;
+}
+
+.pagination {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  background-color: rgba(0, 0, 255, 0.478);
+  color: white;
+  text-align: center;
 }

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+  <link href="/main.css" rel="stylesheet" />
+</head>
+
+<body class="grey-bg">
+  <%- include('nav.ejs')%>
+    <form class="form-box" action="/signup" method="POST">
+      <h4>회원가입</h4>
+      아이디: <input name="id" />
+      비밀번호: <input class="pw" name="pw" type="password" />
+      비밀번호 확인: <input class="pwcheck" name="pwcheck" type="password" />
+      <button class='sign' type="submit">가입</button>
+    </form>
+</body>
+<script>
+
+  // let pw = document.querySelector('.pw')
+  // let pwCheck = document.querySelector('.pwcheck')
+  // console.log(pwCheck)
+  // document.querySelector('.sign').addEventListener('submit', (e) => {
+  //   e.preventDefault
+  //   if (pw.value === pwCheck.value) {
+  //     console.log('같다')
+  //   } else {
+  //     e.preventDefault()
+  //   }
+  // })
+
+</script>
+
+</html>
