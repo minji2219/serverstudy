@@ -10,6 +10,10 @@
 
 <body class="grey-bg">
   <%- include('nav.ejs')%>
+    <form action="/search" method="POST">
+      <input class='search' name='search' placeholder="검색" type="text" />
+      <button class="search-send">🔍</button>
+    </form>
     <div class="white-bg">
       <% for(let i=0; i < posts.length; i++) { %>
         <div class="list-box">
@@ -33,6 +37,9 @@
       </a>
       <%}%>
 </body>
+
+
+
 <script>
   for (let i = 0; i < '<%= posts.length%>'; i++) {
 
