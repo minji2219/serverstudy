@@ -323,3 +323,8 @@ app.post('/comment', async (req, res) => {
     console.log(e);
   };
 });
+
+app.post('/chat', async (req, res) => {
+
+  await db.collection('chat').insertOne({ roomId: req.params.docid });
+});

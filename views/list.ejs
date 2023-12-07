@@ -27,10 +27,10 @@
 
           <a href="/edit/<%= posts[i]._id %>">✏️</a>
           <span class="delete" data-id="<%= posts[i]._id%>">🗑️</span>
-
-          <p>
-            <%= posts[i].content %>
-          </p>
+          <sapn class="chat" data-id="<%= posts[i]._id%>">🗯️</a>
+            <p>
+              <%= posts[i].content %>
+            </p>
         </div>
         <% } %>
 
@@ -58,6 +58,13 @@
               e.target.parentElement.style.display = 'none'
             }
           })
+      })
+
+    document.querySelectorAll('.chat')[i]
+      .addEventListener('click', function (e) {
+        fetch('/chat?docid=' + e.target.dataset.id, {
+          method: POST,
+        })
       })
   }
 </script>
