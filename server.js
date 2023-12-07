@@ -98,7 +98,7 @@ app.get('/', (req, res) => {
 
 app.get('/list', async (req, res) => {
   let result = await db.collection('post').find().toArray();
-  res.render('list.ejs', { posts: result, whole: result.length });
+  res.render('list.ejs', { posts: result, whole: result.length, user: req.user?._id });
 });
 
 //list에서 5개씩만 보여주기 기능
@@ -131,7 +131,9 @@ app.post('/add', checkLogin, upload.single('img1'), async (req, res) => {
       await db.collection('post').insertOne({
         title: req.body.title,
         content: req.body.content,
-        // img: req.file.location,
+        img: req.file ? req.file.location : null,
+        user: req.user._id,
+        username: req.user.username
       });
       res.redirect('/list');
     }
@@ -147,21 +149,24 @@ app.get('/detail/:id', async (req, res) => {
     let result = await db
       .collection('post')
       .findOne({ _id: new ObjectId(req.params.id) });
-    res.render('detail.ejs', { detail: result });
+    let comment = await db.collection('comment').find({ postId: req.params.id }).toArray();
+
+    res.render('detail.ejs', { detail: result, comment: comment });
   } catch (e) {
     res.status(400).send('이상한 url입력함');
   }
 });
 
-//수정 기능(update)
+//수정할 내용 보여주기 기능
 app.get('/edit/:id', async (req, res) => {
+
   let result = await db
     .collection('post')
-    .findOne({ _id: new ObjectId(req.params.id) });
-  res.render('edit.ejs', { posts: result });
+    .findOne({ _id: new ObjectId(req.params.id), user: new Object(req.user?._id) });
+  result ? res.render('edit.ejs', { posts: result }) : res.send('수정 권한이 없습니다.');
 });
 
-//수정할 내용 보여주기 기능
+//수정 기능(update)
 app.put('/edit', async (req, res) => {
   try {
     await db
@@ -177,10 +182,15 @@ app.put('/edit', async (req, res) => {
 //삭제 기능(delete)
 app.delete('/delete', async (req, res) => {
   try {
-    await db
+    const result = await db
       .collection('post')
-      .deleteOne({ _id: new ObjectId(req.query.docid) });
-    res.send('삭제완료');
+      .deleteOne({ _id: new ObjectId(req.query.docid), user: new Object(req.user?._id) });
+
+    if (result.deletedCount === 0) {
+      res.status(400).send(false);
+    } else {
+      res.status(200).send(true);
+    }
   } catch (e) {
     console.log(e);
   }
@@ -294,4 +304,22 @@ app.post('/search', async (req, res) => {
   ];
   const result = await db.collection('post').aggregate(검색조건).toArray();
   res.render('list.ejs', { posts: result, whole: result.length });
+});
+
+//댓글 입력
+app.post('/comment', async (req, res) => {
+
+  try {
+    const result =
+      await db
+        .collection('comment')
+        .insertOne({
+          postId: req.body.postId,
+          content: req.body.comment,
+          username: req.user?.username
+        });
+    res.redirect('back');
+  } catch (e) {
+    console.log(e);
+  };
 });

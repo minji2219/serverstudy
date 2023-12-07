@@ -22,8 +22,12 @@
               <%= posts[i].title %>
             </h3>
           </a>
+          <!-- <%= posts[i].user%>
+            <%= user%> -->
+
           <a href="/edit/<%= posts[i]._id %>">✏️</a>
           <span class="delete" data-id="<%= posts[i]._id%>">🗑️</span>
+
           <p>
             <%= posts[i].content %>
           </p>
@@ -50,7 +54,9 @@
         })
           .then((r) => r.text())
           .then((r) => {
-            e.target.parentElement.style.display = 'none'
+            if (r === 'true') {
+              e.target.parentElement.style.display = 'none'
+            }
           })
       })
   }

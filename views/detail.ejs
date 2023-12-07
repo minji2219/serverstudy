@@ -21,6 +21,22 @@
         <img src="<%= detail.img %>" />
       </div>
     </div>
+
+    <form class="form-box" action="/comment" method="POST">
+      댓글 입력창
+      <input style="display:none" name="postId" value="<%= detail._id%>" />
+      <input name="comment" />
+      <button>입력</button>
+    </form>
+
+    <div class="comments">
+      <% for(let i=0; i<comment.length; i++) { %>
+        <div class="comment">
+          <%= comment[i].username%>:
+            <%= comment[i].content%>
+        </div>
+        <%}%>
+    </div>
 </body>
 
 </html>
