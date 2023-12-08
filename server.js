@@ -388,3 +388,30 @@ io.on('connection', (socket) => {
   });
 
 });
+
+//sse
+app.get('/stream/list', (req, res) => {
+  res.writeHead(200, {
+    'Connection': 'keep-alive',
+    'Content-Type': 'text/event-stream',
+    'Cache-Control': 'no-cache',
+  });
+
+  // res.write('event: msg\n');
+  // res.write('data: 바보\n\n');
+
+  let 조건 = [
+    { $match: { operationType: 'insert' } }
+  ];
+  //컬렉션 감지
+  let changeStream = db.collection('post').watch(조건);
+  //post컬렉션의 document 생성/수정/삭제시 아래의 코드가 실행됨
+  changeStream.on('change', (result) => {
+    //변동 내용 result에 저장되어 있음
+    // console.log('변화감지', result);
+
+    //변한 내용의 document를 바로 보내주는 코드
+    res.write('event: msg\n');
+    res.write(`data: ${JSON.stringify(result.fullDocument)}\n\n`);
+  });
+});

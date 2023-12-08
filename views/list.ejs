@@ -80,4 +80,13 @@
   }
 </script>
 
+<script>
+  let eventSource = new EventSource('/stream/list')
+  eventSource.addEventListener('msg', (e) => {
+    console.log(e.data)
+    let 가져온거 = JSON.parse(e.data)
+    document.querySelector('.white-bg').insertAdjacentHTML('afterbegin', `<div class="list-box"><h4>${가져온거.title}</h4></div>`)
+  })
+</script>
+
 </html>
