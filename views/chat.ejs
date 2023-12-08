@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <link href="/main.css" rel="stylesheet" />
-  </head>
-  <body class="grey-bg">
-    <%- include('nav.ejs')%>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+  <link href="/main.css" rel="stylesheet" />
+</head>
+
+<body class="grey-bg">
+  <%- include('nav.ejs')%>
     <div class="detail-bg">
       <div class="chat-screen">
         <div class="chat-box"><span>안녕하세요</span></div>
@@ -19,14 +21,29 @@
       <input class="chat-input" />
       <button class="chat-button">전송</button>
     </div>
-  </body>
+</body>
 
-  <script src="https://cdn.jsdelivr.net/npm/socket.io@4.7.2/client-dist/socket.io.min.js"></script>
-  <script>
-    const socket = io();
-    socket.emit("age", "20");
-    socket.on("name", (data) => {
-      console.log("서버가보낸거", data);
-    });
-  </script>
+<script src="https://cdn.jsdelivr.net/npm/socket.io@4.7.2/client-dist/socket.io.min.js"></script>
+<script>
+
+  const socket = io();
+  socket.emit('ask-join', '<%= chat._id%>')
+
+  document.querySelector('.chat-button').addEventListener('click', () => {
+    let msg = document.querySelector('.chat-input').value
+    socket.emit('message', { msg: msg, room: '<%= chat._id%>' })
+  })
+
+  socket.on("broadcast", (data) => {
+    console.log("서버가보낸거", data);
+    // let chat = document.createElement('div')
+    // chat.classList.add('chat-box', 'mine')
+    // let chatContent = document.createElement('span')
+    // chatContent.innerHTML = data
+    // document.querySelector('.chat-screen').appendChild(chat).appendChild(chatContent)
+    document.querySelector('.chat-screen').insertAdjacentHTML('beforeend',
+      `<div class='chat-box mine'><span>${data}</span></div>`)
+  });
+</script>
+
 </html>

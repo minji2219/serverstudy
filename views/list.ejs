@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <link href="/main.css" rel="stylesheet" />
-  </head>
 
-  <body class="grey-bg">
-    <%- include('nav.ejs')%>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+  <link href="/main.css" rel="stylesheet" />
+</head>
+
+<body class="grey-bg">
+  <%- include('nav.ejs')%>
     <form action="/search" method="POST">
       <input class="search" name="search" placeholder="검색" type="text" />
       <button class="search-send">🔍</button>
@@ -18,63 +19,65 @@
 
     <div class="white-bg">
       <% for(let i=0; i < posts.length; i++) { %>
-      <div class="list-box">
-        <a href="/detail/<%= posts[i]._id %>">
-          <h3><%= posts[i].title %></h3>
-        </a>
-        <% if(`${posts[i].user}`==`${user}`){ %>
-        <a href="/edit/<%= posts[i]._id %>">✏️</a>
-        <span class="delete" data-id="<%= posts[i]._id%>">🗑️</span>
-        <%}%>
-        <span
-          class="chat"
-          data-id="<%= posts[i]._id%>"
-          data-writtenid="<%= posts[i].user%>"
-          >🗯️
-        </span>
-        <p><%= posts[i].content %></p>
-      </div>
-      <% } %>
+        <div class="list-box">
+          <a href="/detail/<%= posts[i]._id %>">
+            <h3>
+              <%= posts[i].title %>
+            </h3>
+          </a>
+          <% if(`${posts[i].user}`==`${user}`){ %>
+            <a href="/edit/<%= posts[i]._id %>">✏️</a>
+            <span class="delete" data-id="<%= posts[i]._id%>">🗑️</span>
+            <%}%>
+              <a href="/chatlist" class="chat" data-id="<%= posts[i]._id%>" data-writtenid="<%= posts[i].user%>">🗯️</a>
+              <p>
+                <%= posts[i].content %>
+              </p>
+        </div>
+        <% } %>
     </div>
     <% for(let i=0 ; i<(Number(whole)/5) ;i++){%>
-    <a class="pagination" href="/list/<%= i+1 %>"> <%= i+1%> </a>
-    <%}%>
-  </body>
+      <a class="pagination" href="/list/<%= i+1 %>">
+        <%= i+1%>
+      </a>
+      <%}%>
+</body>
 
-  <script>
-    for (let i = 0; i < "<%= posts.length%>"; i++) {
-      document
-        .querySelectorAll(".delete")
-        [i].addEventListener("click", function (e) {
-          fetch("/delete?docid=" + e.target.dataset.id, {
-            method: "DELETE",
-          })
-            .then((r) => r.text())
-            .then((r) => {
-              if (r === "true") {
-                e.target.parentElement.style.display = "none";
-              }
-            });
+<script>
+  for (let i = 0; i < "<%= posts.length%>"; i++) {
+    document
+      .querySelectorAll(".delete")
+    [i].addEventListener("click", function (e) {
+      fetch("/delete?docid=" + e.target.dataset.id, {
+        method: "DELETE",
+      })
+        .then((r) => r.text())
+        .then((r) => {
+          if (r === "true") {
+            e.target.parentElement.style.display = "none";
+          }
         });
-    }
-  </script>
-  <script>
-    for (let i = 0; i < "<%= posts.length%>"; i++) {
-      document
-        .querySelectorAll(".chat")
-        [i].addEventListener("click", function (e) {
-          console.log(e.target.dataset.writtenid);
-          fetch("/chat", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              writeId: e.target.dataset.writtenid,
-              postId: e.target.dataset.id,
-            }),
-          });
-        });
-    }
-  </script>
+    });
+  }
+</script>
+<script>
+  for (let i = 0; i < "<%= posts.length%>"; i++) {
+    document
+      .querySelectorAll(".chat")
+    [i].addEventListener("click", function (e) {
+      console.log(e.target.dataset.writtenid);
+      fetch("/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          writeId: e.target.dataset.writtenid,
+          postId: e.target.dataset.id,
+        }),
+      });
+    });
+  }
+</script>
+
 </html>
